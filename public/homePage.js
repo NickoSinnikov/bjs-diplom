@@ -14,3 +14,28 @@ ApiConnector.current((response) => {
         ProfileWidget.showProfile(result.data)
     }
 });
+
+let ratesBoard = new RatesBoard();
+
+function getCurrencyRate() {
+    ApiConnector.gerStocks((response) => {
+        if (response.success) {
+            RatesBoard.clearTable();
+            RatesBoard.fillTable(result.data);
+        }
+    });
+}
+getCurrencyRate();
+setInterval(getCurrencyRate, 60000);
+
+let moneyManager = new MoneyManager();
+moneyManager.addMoneyCallback = function(data) {
+    ApiConnector.addMoney(data, (response) => {
+        if (response.success) {
+            ProfileWidget.showProfile(result.data);
+            MoneyManager.setMessage(response.success, 'Баланс пополнен')
+        } else {
+            MoneyManager.setMessage('Ошибка пополнения');
+        }
+    });
+}
