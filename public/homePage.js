@@ -18,7 +18,7 @@ ApiConnector.current((response) => {
 let ratesBoard = new RatesBoard();
 
 function getCurrencyRate() {
-    ApiConnector.gerStocks((response) => {
+    ApiConnector.gerStocks(response => {
         if (response.success) {
             RatesBoard.clearTable();
             RatesBoard.fillTable(result.data);
@@ -37,5 +37,25 @@ moneyManager.addMoneyCallback = function(data) {
         } else {
             MoneyManager.setMessage('Ошибка пополнения');
         }
-    });
+    })
+}
+moneyManager.conversionMoneyCallback = function(data) {
+    ApiConnector.convertMoney(data, (response) => {
+        if (response.success) {
+            ProfileWidget.showProfile(result.data);
+            MoneyManager.setMessage(response.success, 'Ковертирование  выполнено')
+        } else {
+            MoneyManager.setMessage('Ошибка конвертации');
+        }
+    })
+}
+moneyManager.sendMoneyCallback = function(data) {
+    ApiConnector.transferMoney(data, (response) => {
+        if (response.success) {
+            ProfileWidget.showProfile(result.data);
+            MoneyManager.setMessage(response.success, 'Перевод  выполнен')
+        } else {
+            MoneyManager.setMessage('Ошибка перевода');
+        }
+    })
 }
