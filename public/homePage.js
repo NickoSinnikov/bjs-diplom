@@ -57,5 +57,37 @@ moneyManager.sendMoneyCallback = function(data) {
         } else {
             MoneyManager.setMessage('Ошибка перевода');
         }
-    })
+    });
+}
+let favoritesWidget = new FavoritesWidget();
+ApiConnector.getFavorites(response => {
+    if (response.success) {
+        favoritesWidget.clearTable();
+        favoritesWidget.fillTable(result.data);
+        moneyManager.updateUsersList(result.data);
+    }
+});
+favoritesWidget.addUserCallback = function(data) {
+    ApiConnector.addUserToFavorites(data, (response) => {
+        if (response.success) {
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(result.data);
+            moneyManager.updateUsersList(result.data);
+            favoritesWidget.setMessage('Пользователь добавлен')
+        } else {
+            favoritesWidget.setMessage('Ошибка добавления пользователя')
+        }
+    });
+}
+favoritesWidget.removeUserCallback = function(data) {
+    ApiConnector.removeUserFromFavorites(data, (response) => {
+        if (response.success) {
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(result.data);
+            moneyManager.updateUsersList(result.data);
+            favoritesWidget.setMessage('Пользователь удален')
+        } else {
+            favoritesWidget.setMessage('Ошибка удаления пользователя')
+        }
+    });
 }
